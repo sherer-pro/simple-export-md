@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: simple-export-md 0.4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-12 00:00+0000\n"
+"PO-Revision-Date: 2025-11-12 13:48+0300\n"
+"Last-Translator: \n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: simple-export-md\n"
+"X-Generator: Poedit 2.0.7\n"
+
+#: assets/export-md.js:1
+msgid "Export to Markdown"
+msgstr "Експорт у Markdown"
+
+#: assets/export-md.js:2
+msgid "Download .md"
+msgstr "Завантажити .md"
+
+#: assets/export-md.js:3
+msgid "Copy Markdown"
+msgstr "Копіювати Markdown"
+
+#: assets/export-md.js:4
+msgid "Processing…"
+msgstr "Обробка…"
+
+#: assets/export-md.js:5
+msgid "Markdown copied to clipboard."
+msgstr "Markdown скопійовано до буфера обміну."
+
+#: assets/export-md.js:6
+msgid "Failed to copy Markdown."
+msgstr "Не вдалося скопіювати Markdown."
+
+#: assets/export-md.js:7
+msgid "Markdown file generated and downloaded."
+msgstr "Файл .md згенеровано й завантажено."
+
+#: assets/export-md.js:8
+msgid "Failed to download Markdown."
+msgstr "Не вдалося завантажити файл Markdown."

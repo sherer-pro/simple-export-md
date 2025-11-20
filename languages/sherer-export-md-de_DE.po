@@ -1,0 +1,45 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: simple-export-md 0.4.0\n"
+"POT-Creation-Date: 2025-11-12 00:00+0000\n"
+"PO-Revision-Date: 2025-11-12 13:48+0300\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: simple-export-md\n"
+"X-Generator: Poedit 2.0.7\n"
+
+#: assets/export-md.js:1
+msgid "Export to Markdown"
+msgstr "Als Markdown exportieren"
+
+#: assets/export-md.js:2
+msgid "Download .md"
+msgstr ".md herunterladen"
+
+#: assets/export-md.js:3
+msgid "Copy Markdown"
+msgstr "Markdown kopieren"
+
+#: assets/export-md.js:4
+msgid "Processing…"
+msgstr "Verarbeitung…"
+
+#: assets/export-md.js:5
+msgid "Markdown copied to clipboard."
+msgstr "Markdown in die Zwischenablage kopiert."
+
+#: assets/export-md.js:6
+msgid "Failed to copy Markdown."
+msgstr "Markdown konnte nicht kopiert werden."
+
+#: assets/export-md.js:7
+msgid "Markdown file generated and downloaded."
+msgstr "Markdown-Datei erstellt und heruntergeladen."
+
+#: assets/export-md.js:8
+msgid "Failed to download Markdown."
+msgstr "Markdown-Datei konnte nicht heruntergeladen werden."

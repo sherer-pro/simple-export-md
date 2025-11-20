@@ -1,0 +1,19 @@
+{
+  "name": "simple-export-to-md",
+  "version": "1.0.0",
+  "description": "Основание: плагин и инструкция написаны здесь по твоему запросу, без веб‑поиска.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sherer-pro/simple-export-md.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "terser": "^5.44.1"
+  }
+}
