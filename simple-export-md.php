@@ -3,7 +3,7 @@
  * Plugin Name: Simple Export to Markdown
  * Plugin URI: https://github.com/sherer-pro/simple-export-md
  * Description: Adds a Gutenberg panel “Export to Markdown” with buttons to download .md or copy Markdown to clipboard.
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      Pavel Sherer
  * Author URI:  https://sherer.pro
  * License:     GPL-2.0-or-later
@@ -32,14 +32,19 @@ function sherer_export_md_requirements_check() {
         return true;
     }
 
-    $message  = '<strong>Export Gutenberg to Markdown</strong> cannot run.';
+    $message  = '<strong>Simple Export to Markdown</strong> cannot run.';
     $message .= '<br>Minimum requirements: PHP ' . esc_html( $php_required ) . ' and WordPress ' . esc_html( $wp_required ) . '.';
     $message .= '<br>Your system: PHP ' . esc_html( PHP_VERSION ) . ', WordPress ' . esc_html( get_bloginfo( 'version' ) ) . '.';
 
     add_action(
         'admin_notices',
         function () use ( $message ) {
-            echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
+            $allowed = array(
+                'strong' => array(),
+                'br'     => array(),
+            );
+            echo '<div class="notice notice-error"><p>' . wp_kses( $message, $allowed ) . '</p></div>';
+
         }
     );
 
@@ -72,7 +77,7 @@ function sherer_export_md_enqueue_block_editor_assets() {
     $turndown_file = file_exists( $asset_dir . 'turndown.min.js' ) ? 'turndown.min.js' : 'turndown.js';
 
     wp_enqueue_script(
-        'simple-export-md-turndown',
+        'sherer-export-md-turndown',
         plugins_url( 'assets/' . $turndown_file, __FILE__ ),
         array(),
         file_exists( $asset_dir . $turndown_file ) ? filemtime( $asset_dir . $turndown_file ) : '7.1.2',
@@ -80,12 +85,12 @@ function sherer_export_md_enqueue_block_editor_assets() {
     );
 
     // Use minified main script by default, switch to non-minified when SCRIPT_DEBUG is true.
-    $debug        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-    $script_file  = $debug ? 'export-md.js' : 'export-md.min.js';
-    $script_path  = $asset_dir . $script_file;
+    $debug       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+    $script_file = $debug ? 'export-md.js' : 'export-md.min.js';
+    $script_path = $asset_dir . $script_file;
 
     wp_enqueue_script(
-        'simple-export-md',
+        'sherer-export-md',
         plugins_url( 'assets/' . $script_file, __FILE__ ),
         array(
             'wp-plugins',
@@ -102,21 +107,9 @@ function sherer_export_md_enqueue_block_editor_assets() {
 
     // JS translations (JSON files in /languages).
     wp_set_script_translations(
-        'simple-export-md',
+        'sherer-export-md',
         'simple-export-md',
         plugin_dir_path( __FILE__ ) . 'languages'
     );
 }
 add_action( 'enqueue_block_editor_assets', 'sherer_export_md_enqueue_block_editor_assets' );
-
-/**
- * Load PHP textdomain (for future PHP strings, if needed).
- */
-function sherer_export_md_load_textdomain() {
-    load_plugin_textdomain(
-        'simple-export-md',
-        false,
-        dirname( plugin_basename( __FILE__ ) ) . '/languages'
-    );
-}
-add_action( 'plugins_loaded', 'sherer_export_md_load_textdomain' );
