@@ -71,7 +71,7 @@ function sherer_export_md_enqueue_block_editor_assets() {
         return;
     }
 
-    $asset_dir = plugin_dir_path( __FILE__ ) . 'assets/';
+    $asset_dir = plugin_dir_path(__FILE__) . 'assets/';
 
     // Use minified Turndown if present, fallback to non-minified.
     $turndown_file = file_exists( $asset_dir . 'turndown.min.js' ) ? 'turndown.min.js' : 'turndown.js';
@@ -109,7 +109,7 @@ function sherer_export_md_enqueue_block_editor_assets() {
     wp_set_script_translations(
         'sherer-export-md',
         'simple-export-md',
-        plugin_dir_path( __FILE__ ) . 'languages'
+        plugin_dir_path(__FILE__) . 'languages'
     );
 }
 add_action( 'enqueue_block_editor_assets', 'sherer_export_md_enqueue_block_editor_assets' );
