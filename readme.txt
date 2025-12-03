@@ -2,7 +2,7 @@
 Contributors: skreep
 Tags: markdown, export, clipboard, content, editor
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 0.1.2
 License: GPLv2 or later
