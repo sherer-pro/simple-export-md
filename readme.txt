@@ -4,7 +4,7 @@ Tags: markdown, export, clipboard, content, editor
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Adds a Gutenberg editor panel to export any post or page content to Markdown for
 
 == Description ==
 
-**Export Gutenberg to Markdown** adds a small, useful panel inside the WordPress block editor.
+**Simple Export to Markdown** adds a small, useful panel inside the WordPress block editor.
 With a single click, you can export the current post or page to Markdown — either download a `.md` file or copy it directly to the clipboard.
 
 The plugin uses the [Turndown](https://github.com/mixmark-io/turndown) library to accurately convert Gutenberg blocks into Markdown syntax, preserving headings, paragraphs, images, lists, quotes, and other standard content.
@@ -23,8 +23,7 @@ The plugin uses the [Turndown](https://github.com/mixmark-io/turndown) library t
 * Two modes: **Download .md** or **Copy to Clipboard**.
 * Auto-generated YAML front matter (`title`, `slug`, `date`, `categories`, `tags`).
 * Works natively inside the block editor — no admin pages or complex settings.
-* Lightweight (under 32 KB of JS), no tracking, no external API calls.
-* Fully translatable, with built-in localization support (English, Russian, Ukrainian, German, Spanish, Italian, French).
+* Lightweight (under 14 KB of JS), no tracking, no external API calls.
 
 == Requirements ==
 
