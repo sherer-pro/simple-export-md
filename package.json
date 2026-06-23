@@ -1,19 +1,27 @@
 {
   "name": "simple-export-md",
-  "version": "1.0.0",
-  "description": "Основание: плагин и инструкция написаны здесь по твоему запросу, без веб‑поиска.",
-  "main": "index.js",
+  "version": "0.1.2",
+  "description": "Gutenberg editor panel for exporting posts and pages to Markdown.",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "terser assets/export-md.js -c -m -o assets/export-md.min.js",
+    "check:js": "node --check assets/export-md.js && node --check assets/export-md.min.js",
+    "audit": "npm audit --audit-level=low",
+    "test": "npm run check:js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/sherer-pro/simple-export-md.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "wordpress",
+    "gutenberg",
+    "markdown",
+    "export"
+  ],
+  "author": "Pavel Sherer",
+  "license": "GPL-2.0-or-later",
   "devDependencies": {
-    "terser": "^5.44.1"
+    "terser": "5.44.1"
   }
 }

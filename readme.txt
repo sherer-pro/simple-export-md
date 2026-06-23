@@ -8,56 +8,67 @@ Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds a Gutenberg editor panel to export any post or page content to Markdown format (.md file or clipboard).
+Adds a Gutenberg editor panel to export post or page content to Markdown format.
 
 == Description ==
 
-**Simple Export to Markdown** adds a small, useful panel inside the WordPress block editor.
-With a single click, you can export the current post or page to Markdown — either download a `.md` file or copy it directly to the clipboard.
+**Simple Export to Markdown** adds a small panel inside the WordPress block editor. With one click, editors can download the current post or page as a `.md` file or copy the generated Markdown to the clipboard.
 
-The plugin uses the [Turndown](https://github.com/mixmark-io/turndown) library to accurately convert Gutenberg blocks into Markdown syntax, preserving headings, paragraphs, images, lists, quotes, and other standard content.
+The plugin uses the bundled Turndown library to convert serialized Gutenberg blocks in the browser. It does not create server-side export files, make external API calls, add REST/AJAX endpoints, or store exported content.
 
 == Features ==
 
-* Export any Gutenberg post or page directly to Markdown.
-* Two modes: **Download .md** or **Copy to Clipboard**.
-* Auto-generated YAML front matter (`title`, `slug`, `date`, `categories`, `tags`).
-* Works natively inside the block editor — no admin pages or complex settings.
-* Lightweight (under 14 KB of JS), no tracking, no external API calls.
+* Export Gutenberg content directly to Markdown.
+* Download `.md` files or copy Markdown to the clipboard.
+* Auto-generated YAML front matter for `title`, `slug`, `date`, `categories`, and `tags`.
+* Uses the edited post state, including unsaved title, slug, date, category, tag, and block changes.
+* Loads only in the block editor for users with `edit_posts`.
+* JavaScript translations are loaded with `wp_set_script_translations()`.
 
 == Requirements ==
 
 * WordPress 6.0 or newer.
 * PHP 7.4 or newer.
-* Active Gutenberg (block) editor.
+* Active Gutenberg/block editor.
 
 == Installation ==
 
-1. Upload the plugin folder to your `/wp-content/plugins/` directory, or install the plugin directly via the WordPress Plugins screen.
-2. Activate the plugin through the “Plugins” menu in WordPress.
-3. Open any post or page in the Gutenberg editor — you’ll see a new sidebar panel named **Export to Markdown**.
-4. Click **Download .md** to save a Markdown file, or **Copy Markdown** to copy the generated text into your clipboard.
+1. Upload the plugin folder to `/wp-content/plugins/`, or install it through the WordPress Plugins screen.
+2. Activate the plugin through the "Plugins" menu in WordPress.
+3. Open any post or page in the block editor.
+4. Find the **Export to Markdown** panel in the editor sidebar.
+5. Click **Download .md** or **Copy Markdown**.
 
 == Frequently Asked Questions ==
 
-= Where can I find the export button? =
-In the Gutenberg editor sidebar (click the Settings icon if the sidebar is hidden), under a panel titled “Export to Markdown”.
-
 = Does this work in the Classic Editor? =
-No. The plugin only works in the modern block (Gutenberg) editor.
 
-= Can I export custom blocks? =
-Yes. Custom blocks will be serialized as HTML before Markdown conversion. Standard HTML will appear correctly in your Markdown output.
+No. The plugin is designed for the WordPress block editor.
 
 = Does it save files on the server? =
-No. All conversion and download happen locally in your browser for security and privacy.
+
+No. Conversion, download, and clipboard copy happen locally in the browser.
+
+= Can it export custom blocks? =
+
+Custom blocks are serialized by WordPress before Turndown converts the resulting HTML to Markdown.
+
+= Why are the JavaScript translation files named with the script handle? =
+
+The files use the `simple-export-md-{locale}-simple-export-md.json` pattern so translations work for both the source and minified editor scripts.
 
 == Screenshots ==
 
 1. Gutenberg editor with the **Export to Markdown** panel in the right sidebar.
 2. Example Markdown file with generated YAML front matter.
 
+== Changelog ==
+
+= 0.1.2 =
+* Hardened editor asset loading.
+* Fixed JavaScript translation file names.
+* Improved Markdown export reliability and filename sanitization.
+
 == License ==
 
-This plugin is open-source software licensed under the GPLv2 (or later).
-© 2025 [Pavel Sherer](https://sherer.pro)
+This plugin is open-source software licensed under the GPLv2 or later.
