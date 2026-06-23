@@ -1,46 +1,43 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: simple-export-md 0.4.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 00:00+0000\n"
-"PO-Revision-Date: 2025-11-12 13:47+0300\n"
-"Last-Translator: Pavel Sherer <pavel@sherer.pro>\n"
-"Language-Team: Russian\n"
+"Project-Id-Version: simple-export-md 0.1.2\n"
+"POT-Creation-Date: 2026-06-21 00:00+0300\n"
+"PO-Revision-Date: 2026-06-21 00:00+0300\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.7\n"
 "X-Domain: simple-export-md\n"
 
-#: assets/export-md.js:1
 msgid "Export to Markdown"
 msgstr "Экспорт в Markdown"
 
-#: assets/export-md.js:2
 msgid "Download .md"
 msgstr "Скачать .md"
 
-#: assets/export-md.js:3
 msgid "Copy Markdown"
 msgstr "Копировать Markdown"
 
-#: assets/export-md.js:4
-msgid "Processing…"
+msgid "Processing..."
 msgstr "Обработка…"
 
-#: assets/export-md.js:5
+msgid "Loading terms..."
+msgstr "Загрузка терминов..."
+
 msgid "Markdown copied to clipboard."
 msgstr "Markdown скопирован в буфер обмена."
 
-#: assets/export-md.js:6
 msgid "Failed to copy Markdown."
 msgstr "Не удалось скопировать Markdown."
 
-#: assets/export-md.js:7
 msgid "Markdown file generated and downloaded."
 msgstr "Файл .md сформирован и загружен."
 
-#: assets/export-md.js:8
 msgid "Failed to download Markdown."
 msgstr "Не удалось скачать файл Markdown."
+
+msgid "Markdown exporter is not ready. Please reload the editor."
+msgstr "Экспорт Markdown не готов. Перезагрузите редактор."
+
+msgid "Clipboard is not available in this browser."
+msgstr "Буфер обмена недоступен в этом браузере."

@@ -1,0 +1,48 @@
+{
+  "translation-revision-date": "2026-06-21 00:00+0300",
+  "generator": "Codex",
+  "source": "assets/export-md.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "uk",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Export to Markdown": [
+        "Експорт у Markdown"
+      ],
+      "Download .md": [
+        "Завантажити .md"
+      ],
+      "Copy Markdown": [
+        "Копіювати Markdown"
+      ],
+      "Processing...": [
+        "Обробка…"
+      ],
+      "Loading terms...": [
+        "Завантаження термінів..."
+      ],
+      "Markdown copied to clipboard.": [
+        "Markdown скопійовано до буфера обміну."
+      ],
+      "Failed to copy Markdown.": [
+        "Не вдалося скопіювати Markdown."
+      ],
+      "Markdown file generated and downloaded.": [
+        "Файл .md згенеровано й завантажено."
+      ],
+      "Failed to download Markdown.": [
+        "Не вдалося завантажити файл Markdown."
+      ],
+      "Markdown exporter is not ready. Please reload the editor.": [
+        "Експорт Markdown не готовий. Перезавантажте редактор."
+      ],
+      "Clipboard is not available in this browser.": [
+        "Буфер обміну недоступний у цьому браузері."
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "translation-revision-date": "2026-06-21 00:00+0300",
+  "generator": "Codex",
+  "source": "assets/export-md.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "fr_FR",
+        "plural-forms": "nplurals=2; plural=(n != 1);"
+      },
+      "Export to Markdown": [
+        "Exporter en Markdown"
+      ],
+      "Download .md": [
+        "Télécharger .md"
+      ],
+      "Copy Markdown": [
+        "Copier le Markdown"
+      ],
+      "Processing...": [
+        "Traitement…"
+      ],
+      "Loading terms...": [
+        "Chargement des termes..."
+      ],
+      "Markdown copied to clipboard.": [
+        "Markdown copié dans le presse-papiers."
+      ],
+      "Failed to copy Markdown.": [
+        "Impossible de copier le Markdown."
+      ],
+      "Markdown file generated and downloaded.": [
+        "Fichier .md généré et téléchargé."
+      ],
+      "Failed to download Markdown.": [
+        "Impossible de télécharger le fichier Markdown."
+      ],
+      "Markdown exporter is not ready. Please reload the editor.": [
+        "L’exportateur Markdown n’est pas prêt. Veuillez recharger l’éditeur."
+      ],
+      "Clipboard is not available in this browser.": [
+        "Le presse-papiers n’est pas disponible dans ce navigateur."
+      ]
+    }
+  }
+}
