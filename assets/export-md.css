@@ -1,0 +1,21 @@
+.simple-export-md-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.simple-export-md-notice-wrap {
+    margin-bottom: 8px;
+}
+
+.simple-export-md-notice-transition {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 180ms ease-out, transform 180ms ease-out;
+}
+
+.simple-export-md-notice-transition.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

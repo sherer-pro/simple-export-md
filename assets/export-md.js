@@ -6,73 +6,176 @@
     const { __ } = wp.i18n;
     const { createElement: h, useState, useCallback, useEffect } = wp.element;
 
-    function injectStylesOnce() {
-        if (document.getElementById('simple-export-md-styles')) return;
-        const style = document.createElement('style');
-        style.id = 'simple-export-md-styles';
-        style.type = 'text/css';
-        style.appendChild(document.createTextNode(
-            '.simple-export-md-buttons{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}' +
-            '.simple-export-md-notice-wrap{margin-bottom:8px}' +
-            '.simple-export-md-notice-transition{opacity:0;transform:translateY(4px);transition:opacity .18s ease-out,transform .18s ease-out}' +
-            '.simple-export-md-notice-transition.is-visible{opacity:1;transform:translateY(0)}'
-        ));
-        document.head.appendChild(style);
+    const TERM_QUERY_BASE = {
+        per_page: 100,
+        orderby: 'include',
+    };
+
+    function normalizeTermIds(value) {
+        return Array.isArray(value) ? value.filter(Boolean) : [];
     }
-    injectStylesOnce();
+
+    function buildTermsQuery(ids) {
+        return {
+            ...TERM_QUERY_BASE,
+            include: ids,
+        };
+    }
+
+    function selectTerms(select, taxonomy, ids) {
+        if (!ids.length) {
+            return {
+                isLoading: false,
+                records: [],
+            };
+        }
+
+        const query = buildTermsQuery(ids);
+        const args = ['taxonomy', taxonomy, query];
+        const core = select('core');
+        const records = core.getEntityRecords(...args);
+        const hasFinished = typeof core.hasFinishedResolution === 'function'
+            ? core.hasFinishedResolution('getEntityRecords', args)
+            : Array.isArray(records);
+
+        return {
+            isLoading: !hasFinished,
+            records: Array.isArray(records) ? records : [],
+        };
+    }
+
+    function stripHtml(value) {
+        const template = document.createElement('template');
+        template.innerHTML = String(value);
+        return template.content.textContent || '';
+    }
+
+    function normalizeTitle(title) {
+        if (typeof title === 'string') {
+            return title;
+        }
+
+        if (title && typeof title.raw === 'string') {
+            return title.raw;
+        }
+
+        if (title && typeof title.rendered === 'string') {
+            return stripHtml(title.rendered);
+        }
+
+        return '';
+    }
+
+    function yamlString(value) {
+        return JSON.stringify(String(value));
+    }
+
+    function yamlArray(values) {
+        return '[' + values.map(yamlString).join(', ') + ']';
+    }
 
     function buildFrontMatter(post, cats, tags) {
+        const title = normalizeTitle(post.title).trim();
+        const slug = String(post.slug || '').trim();
+        const date = String(post.date || '').trim();
+        const categoryNames = cats.map((term) => term && term.name).filter(Boolean);
+        const tagNames = tags.map((term) => term && term.name).filter(Boolean);
         const lines = ['---'];
-        if (post?.title) lines.push('title: ' + JSON.stringify(post.title));
-        if (post?.slug)  lines.push('slug: ' + post.slug);
-        if (post?.date)  lines.push('date: ' + post.date);
-        if (cats?.length) lines.push('categories: [' + cats.map(c => JSON.stringify(c.name)).join(', ') + ']');
-        if (tags?.length) lines.push('tags: [' + tags.map(t => JSON.stringify(t.name)).join(', ') + ']');
+
+        if (title) lines.push('title: ' + yamlString(title));
+        if (slug) lines.push('slug: ' + yamlString(slug));
+        if (date) lines.push('date: ' + yamlString(date));
+        if (categoryNames.length) lines.push('categories: ' + yamlArray(categoryNames));
+        if (tagNames.length) lines.push('tags: ' + yamlArray(tagNames));
+
         lines.push('---\n');
         return lines.join('\n');
     }
 
-    function Panel() {
-        const post   = useSelect(s => s('core/editor').getCurrentPost(), []);
-        const blocks = useSelect(s => s('core/block-editor').getBlocks(), []);
+    function sanitizeFilename(slug, postId) {
+        const fallback = postId ? 'post-' + postId : 'post';
+        const base = String(slug || '').trim() || fallback;
+        const clean = base
+            .replace(/[\\/:*?"<>|#%{}[\]^~`]/g, '-')
+            .replace(/[\u0000-\u001f\u0080-\u009f]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^\.+/, '')
+            .replace(/[.-]+$/, '')
+            .slice(0, 120);
 
-        const catIds = post?.categories || [];
-        const tagIds = post?.tags || [];
+        return (clean || fallback) + '.md';
+    }
+
+    function assertExporterReady() {
+        if (typeof window.TurndownService !== 'function') {
+            throw new Error(__('Markdown exporter is not ready. Please reload the editor.', 'simple-export-md'));
+        }
+    }
+
+    function assertClipboardReady() {
+        if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+            throw new Error(__('Clipboard is not available in this browser.', 'simple-export-md'));
+        }
+    }
+
+    function Panel() {
+        const editorState = useSelect((select) => {
+            const editor = select('core/editor');
+            const currentPost = editor.getCurrentPost ? editor.getCurrentPost() : {};
+            const currentPostId = editor.getCurrentPostId ? editor.getCurrentPostId() : currentPost?.id;
+
+            return {
+                id: currentPostId,
+                title: editor.getEditedPostAttribute('title'),
+                slug: editor.getEditedPostAttribute('slug'),
+                date: editor.getEditedPostAttribute('date'),
+                categories: normalizeTermIds(editor.getEditedPostAttribute('categories')),
+                tags: normalizeTermIds(editor.getEditedPostAttribute('tags')),
+            };
+        }, []);
+
+        const blocks = useSelect((select) => select('core/block-editor').getBlocks(), []);
+        const catIdsKey = editorState.categories.join(',');
+        const tagIdsKey = editorState.tags.join(',');
 
         const cats = useSelect(
-            s => catIds.length ? s('core').getEntityRecords('taxonomy', 'category', { include: catIds }) : [],
-            [catIds.join(',')]
-        ) || [];
+            (select) => selectTerms(select, 'category', editorState.categories),
+            [catIdsKey]
+        );
 
         const tags = useSelect(
-            s => tagIds.length ? s('core').getEntityRecords('taxonomy', 'post_tag', { include: tagIds }) : [],
-            [tagIds.join(',')]
-        ) || [];
+            (select) => selectTerms(select, 'post_tag', editorState.tags),
+            [tagIdsKey]
+        );
 
-        const [busy, setBusy]       = useState(false);
+        const [busy, setBusy] = useState(false);
         const [message, setMessage] = useState('');
-        const [status, setStatus]   = useState(null); // 'success' | 'error' | null
+        const [status, setStatus] = useState(null); // 'success' | 'error' | null
         const [visible, setVisible] = useState(false);
+        const termsLoading = cats.isLoading || tags.isLoading;
+        const disabled = busy || termsLoading;
 
         useEffect(() => {
             if (!message || !status) {
                 setVisible(false);
-                return;
+                return undefined;
             }
+
+            let clearTimer;
             const showTick = requestAnimationFrame(() => setVisible(true));
             const hideTimer = setTimeout(() => {
                 setVisible(false);
-                const CLEAR_DELAY_MS = 220;
-                const clearTimer = setTimeout(() => {
+                clearTimer = setTimeout(() => {
                     setStatus(null);
                     setMessage('');
-                }, CLEAR_DELAY_MS);
-                return () => clearTimeout(clearTimer);
+                }, 220);
             }, 2400);
 
             return () => {
                 cancelAnimationFrame(showTick);
                 clearTimeout(hideTimer);
+                clearTimeout(clearTimer);
             };
         }, [message, status]);
 
@@ -82,9 +185,10 @@
         }, []);
 
         const buildMarkdown = useCallback(() => {
+            assertExporterReady();
+
             const html = wp.blocks.serialize(blocks);
-            /* global TurndownService */
-            const td = new TurndownService({
+            const td = new window.TurndownService({
                 headingStyle: 'atx',
                 codeBlockStyle: 'fenced',
                 emDelimiter: '_',
@@ -96,13 +200,14 @@
             });
 
             const body = td.turndown(html);
-            const fm = buildFrontMatter(post, cats, tags);
+            const fm = buildFrontMatter(editorState, cats.records, tags.records);
             return fm + body + '\n';
-        }, [blocks, post, cats, tags]);
+        }, [blocks, editorState, cats.records, tags.records]);
 
         async function handleCopy() {
             try {
                 setBusy(true);
+                assertClipboardReady();
                 const md = buildMarkdown();
                 await navigator.clipboard.writeText(md);
                 showMessage('success', __('Markdown copied to clipboard.', 'simple-export-md'));
@@ -120,8 +225,10 @@
                 const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = (post?.slug || 'post') + '.md';
+                a.download = sanitizeFilename(editorState.slug, editorState.id);
+                document.body.appendChild(a);
                 a.click();
+                a.remove();
                 setTimeout(() => URL.revokeObjectURL(a.href), 10000);
                 showMessage('success', __('Markdown file generated and downloaded.', 'simple-export-md'));
             } catch (e) {
@@ -130,6 +237,10 @@
                 setBusy(false);
             }
         }
+
+        const busyLabel = termsLoading
+            ? __('Loading terms...', 'simple-export-md')
+            : __('Processing...', 'simple-export-md');
 
         return h(
             PluginDocumentSettingPanel,
@@ -152,8 +263,8 @@
             h(
                 'div',
                 { className: 'simple-export-md-buttons' },
-                h(Button, { isPrimary: true, onClick: handleDownload, disabled: busy }, busy ? __('Processing…', 'simple-export-md') : __('Download .md', 'simple-export-md')),
-                h(Button, { isPrimary: true, onClick: handleCopy,     disabled: busy }, busy ? __('Processing…', 'simple-export-md') : __('Copy Markdown', 'simple-export-md'))
+                h(Button, { isPrimary: true, onClick: handleDownload, disabled }, disabled ? busyLabel : __('Download .md', 'simple-export-md')),
+                h(Button, { isPrimary: true, onClick: handleCopy, disabled }, disabled ? busyLabel : __('Copy Markdown', 'simple-export-md'))
             )
         );
     }

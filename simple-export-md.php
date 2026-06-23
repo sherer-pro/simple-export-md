@@ -16,14 +16,22 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+define( 'SHERER_EXPORT_MD_VERSION', '0.1.2' );
+define( 'SHERER_EXPORT_MD_MIN_PHP', '7.4' );
+define( 'SHERER_EXPORT_MD_MIN_WP', '6.0' );
+define( 'SHERER_EXPORT_MD_TEXT_DOMAIN', 'simple-export-md' );
+define( 'SHERER_EXPORT_MD_SCRIPT_HANDLE', 'simple-export-md' );
+define( 'SHERER_EXPORT_MD_TURNDOWN_HANDLE', 'simple-export-md-turndown' );
+define( 'SHERER_EXPORT_MD_STYLE_HANDLE', 'simple-export-md-editor' );
+
 /**
  * Requirements check: PHP >= 7.4, WordPress >= 6.0.
  * If requirements are not met, show admin notice and deactivate the plugin.
  */
 function sherer_export_md_requirements_check() {
 
-    $php_required = '7.4';
-    $wp_required  = '6.0';
+    $php_required = SHERER_EXPORT_MD_MIN_PHP;
+    $wp_required  = SHERER_EXPORT_MD_MIN_WP;
 
     $php_ok = version_compare( PHP_VERSION, $php_required, '>=' );
     $wp_ok  = version_compare( get_bloginfo( 'version' ), $wp_required, '>=' );
@@ -64,35 +72,53 @@ if ( ! sherer_export_md_requirements_check() ) {
 }
 
 /**
+ * Get an asset version based on the file modification time.
+ *
+ * @param string $path Absolute path to the asset.
+ * @return string
+ */
+function sherer_export_md_asset_version( $path ) {
+    return file_exists( $path ) ? (string) filemtime( $path ) : SHERER_EXPORT_MD_VERSION;
+}
+
+/**
  * Enqueue editor assets (Turndown + main script).
  */
 function sherer_export_md_enqueue_block_editor_assets() {
-    if ( ! is_admin() ) {
+    if ( ! is_admin() || ! current_user_can( 'edit_posts' ) ) {
         return;
     }
 
-    $asset_dir = plugin_dir_path(__FILE__) . 'assets/';
+    $asset_dir = plugin_dir_path( __FILE__ ) . 'assets/';
+    $asset_url = plugin_dir_url( __FILE__ ) . 'assets/';
+    $debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 
-    // Use minified Turndown if present, fallback to non-minified.
-    $turndown_file = file_exists( $asset_dir . 'turndown.min.js' ) ? 'turndown.min.js' : 'turndown.js';
+    $turndown_file = $debug ? 'turndown.js' : 'turndown.min.js';
+    if ( ! file_exists( $asset_dir . $turndown_file ) ) {
+        $turndown_file = 'turndown.js';
+    }
 
     wp_enqueue_script(
-        'sherer-export-md-turndown',
-        plugins_url( 'assets/' . $turndown_file, __FILE__ ),
+        SHERER_EXPORT_MD_TURNDOWN_HANDLE,
+        $asset_url . $turndown_file,
         array(),
-        file_exists( $asset_dir . $turndown_file ) ? filemtime( $asset_dir . $turndown_file ) : '7.1.2',
+        sherer_export_md_asset_version( $asset_dir . $turndown_file ),
         true
     );
 
     // Use minified main script by default, switch to non-minified when SCRIPT_DEBUG is true.
-    $debug       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
     $script_file = $debug ? 'export-md.js' : 'export-md.min.js';
     $script_path = $asset_dir . $script_file;
+    if ( ! file_exists( $script_path ) ) {
+        $script_file = 'export-md.js';
+        $script_path = $asset_dir . $script_file;
+    }
 
     wp_enqueue_script(
-        'sherer-export-md',
-        plugins_url( 'assets/' . $script_file, __FILE__ ),
+        SHERER_EXPORT_MD_SCRIPT_HANDLE,
+        $asset_url . $script_file,
         array(
+            SHERER_EXPORT_MD_TURNDOWN_HANDLE,
             'wp-plugins',
             'wp-edit-post',
             'wp-element',
@@ -100,16 +126,28 @@ function sherer_export_md_enqueue_block_editor_assets() {
             'wp-data',
             'wp-i18n',
             'wp-blocks',
+            'wp-core-data',
+            'wp-block-editor',
         ),
-        file_exists( $script_path ) ? filemtime( $script_path ) : '0.4.0',
+        sherer_export_md_asset_version( $script_path ),
         true
+    );
+
+    $style_file = 'export-md.css';
+    $style_path = $asset_dir . $style_file;
+
+    wp_enqueue_style(
+        SHERER_EXPORT_MD_STYLE_HANDLE,
+        $asset_url . $style_file,
+        array( 'wp-edit-blocks' ),
+        sherer_export_md_asset_version( $style_path )
     );
 
     // JS translations (JSON files in /languages).
     wp_set_script_translations(
-        'sherer-export-md',
-        'simple-export-md',
-        plugin_dir_path(__FILE__) . 'languages'
+        SHERER_EXPORT_MD_SCRIPT_HANDLE,
+        SHERER_EXPORT_MD_TEXT_DOMAIN,
+        plugin_dir_path( __FILE__ ) . 'languages'
     );
 }
 add_action( 'enqueue_block_editor_assets', 'sherer_export_md_enqueue_block_editor_assets' );
