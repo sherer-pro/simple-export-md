@@ -2,9 +2,9 @@
 Contributors: skreep
 Tags: markdown, export, clipboard, content, editor
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ The plugin uses the bundled Turndown library to convert serialized Gutenberg blo
 
 == Requirements ==
 
-* WordPress 6.0 or newer.
+* WordPress 7.0 or newer.
 * PHP 7.4 or newer.
 * Active Gutenberg/block editor.
 
@@ -68,7 +68,7 @@ Run `npm ci`, `npm run build`, `npm test`, `npm audit --audit-level=low`, and `p
 
 == Changelog ==
 
-= 0.1.2 =
+= 0.1.3 =
 * Hardened editor asset loading.
 * Fixed JavaScript translation file names.
 * Improved Markdown export reliability and filename sanitization.

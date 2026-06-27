@@ -15,7 +15,7 @@ Conversion runs entirely in the browser with the vendored Turndown library. The 
 
 ## Requirements
 
-- WordPress 6.0 or newer.
+- WordPress 7.0 or newer.
 - PHP 7.4 or newer.
 - The WordPress block editor.
 
@@ -80,7 +80,7 @@ php -l simple-export-md.php
 ## Compatibility Smoke Targets
 
 - WordPress 6.0 with PHP 7.4 verifies the minimum supported runtime.
-- WordPress 6.9 with PHP 7.4 or newer verifies the current tested editor runtime.
+- WordPress 7.0 with PHP 7.4 or newer verifies the current tested editor runtime.
 - The WordPress Playground blueprint uses the current tested WordPress target.
 
 ## Localization
