@@ -44,7 +44,22 @@
         };
     }
 
+    function getEditedPostState(editor) {
+        const currentPost = editor.getCurrentPost ? editor.getCurrentPost() : {};
+        const currentPostId = editor.getCurrentPostId ? editor.getCurrentPostId() : currentPost?.id;
+
+        return {
+            id: currentPostId,
+            title: editor.getEditedPostAttribute('title'),
+            slug: editor.getEditedPostAttribute('slug'),
+            date: editor.getEditedPostAttribute('date'),
+            categories: normalizeTermIds(editor.getEditedPostAttribute('categories')),
+            tags: normalizeTermIds(editor.getEditedPostAttribute('tags')),
+        };
+    }
+
     function stripHtml(value) {
+        // Parsed in a detached template for text extraction only; content is never inserted into the document.
         const template = document.createElement('template');
         template.innerHTML = String(value);
         return template.content.textContent || '';
@@ -100,7 +115,7 @@
             .replace(/[\u0000-\u001f\u0080-\u009f]/g, '')
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
-            .replace(/^\.+/, '')
+            .replace(/^[.-]+/, '')
             .replace(/[.-]+$/, '')
             .slice(0, 120);
 
@@ -119,20 +134,28 @@
         }
     }
 
+    function exposeTestHelpers() {
+        if (!window.SIMPLE_EXPORT_MD_TESTS) {
+            return;
+        }
+
+        window.simpleExportMdInternals = {
+            buildFrontMatter,
+            buildTermsQuery,
+            getEditedPostState,
+            normalizeTermIds,
+            normalizeTitle,
+            sanitizeFilename,
+            yamlArray,
+            yamlString,
+        };
+    }
+
+    exposeTestHelpers();
+
     function Panel() {
         const editorState = useSelect((select) => {
-            const editor = select('core/editor');
-            const currentPost = editor.getCurrentPost ? editor.getCurrentPost() : {};
-            const currentPostId = editor.getCurrentPostId ? editor.getCurrentPostId() : currentPost?.id;
-
-            return {
-                id: currentPostId,
-                title: editor.getEditedPostAttribute('title'),
-                slug: editor.getEditedPostAttribute('slug'),
-                date: editor.getEditedPostAttribute('date'),
-                categories: normalizeTermIds(editor.getEditedPostAttribute('categories')),
-                tags: normalizeTermIds(editor.getEditedPostAttribute('tags')),
-            };
+            return getEditedPostState(select('core/editor'));
         }, []);
 
         const blocks = useSelect((select) => select('core/block-editor').getBlocks(), []);

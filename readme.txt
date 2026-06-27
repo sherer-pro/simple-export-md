@@ -57,6 +57,10 @@ Custom blocks are serialized by WordPress before Turndown converts the resulting
 
 The files use the `simple-export-md-{locale}-simple-export-md.json` pattern so translations work for both the source and minified editor scripts.
 
+= How should release builds be verified? =
+
+Run `npm ci`, `npm run build`, `npm test`, `npm audit --audit-level=low`, and `php -l simple-export-md.php`. The minified editor script should only be committed as the Terser output from `npm run build`.
+
 == Screenshots ==
 
 1. Gutenberg editor with the **Export to Markdown** panel in the right sidebar.

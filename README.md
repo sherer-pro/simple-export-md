@@ -56,11 +56,32 @@ Available scripts:
 ```bash
 npm run build
 npm run check:js
+npm run smoke:js
 npm run audit
 npm test
 ```
 
 `assets/export-md.min.js` is generated from `assets/export-md.js` with Terser. Edit the source file, then run `npm run build`.
+
+## Release Checklist
+
+Run these checks before tagging or publishing a release:
+
+```bash
+npm ci
+npm run build
+npm test
+npm audit --audit-level=low
+php -l simple-export-md.php
+```
+
+`assets/export-md.min.js` must be committed only as the Terser output from `npm run build`.
+
+## Compatibility Smoke Targets
+
+- WordPress 6.0 with PHP 7.4 verifies the minimum supported runtime.
+- WordPress 6.9 with PHP 7.4 or newer verifies the current tested editor runtime.
+- The WordPress Playground blueprint uses the current tested WordPress target.
 
 ## Localization
 

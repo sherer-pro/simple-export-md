@@ -6,8 +6,9 @@
   "scripts": {
     "build": "terser assets/export-md.js -c -m -o assets/export-md.min.js",
     "check:js": "node --check assets/export-md.js && node --check assets/export-md.min.js",
+    "smoke:js": "node scripts/smoke-export-md.js",
     "audit": "npm audit --audit-level=low",
-    "test": "npm run check:js"
+    "test": "npm run check:js && npm run smoke:js"
   },
   "repository": {
     "type": "git",
