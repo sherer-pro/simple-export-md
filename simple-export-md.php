@@ -25,6 +25,18 @@ define( 'SHERER_EXPORT_MD_TURNDOWN_HANDLE', 'simple-export-md-turndown' );
 define( 'SHERER_EXPORT_MD_STYLE_HANDLE', 'simple-export-md-editor' );
 
 /**
+ * Load plugin translations.
+ */
+function sherer_export_md_load_textdomain() {
+    load_plugin_textdomain(
+        SHERER_EXPORT_MD_TEXT_DOMAIN,
+        false,
+        dirname( plugin_basename( __FILE__ ) ) . '/languages'
+    );
+}
+add_action( 'plugins_loaded', 'sherer_export_md_load_textdomain' );
+
+/**
  * Requirements check: PHP >= 7.4, WordPress >= 6.0.
  * If requirements are not met, show admin notice and deactivate the plugin.
  */
@@ -40,13 +52,27 @@ function sherer_export_md_requirements_check() {
         return true;
     }
 
-    $message  = '<strong>Simple Export to Markdown</strong> cannot run.';
-    $message .= '<br>Minimum requirements: PHP ' . esc_html( $php_required ) . ' and WordPress ' . esc_html( $wp_required ) . '.';
-    $message .= '<br>Your system: PHP ' . esc_html( PHP_VERSION ) . ', WordPress ' . esc_html( get_bloginfo( 'version' ) ) . '.';
-
     add_action(
         'admin_notices',
-        function () use ( $message ) {
+        function () use ( $php_required, $wp_required ) {
+            $message  = sprintf(
+                /* translators: %s: plugin name. */
+                __( '%s cannot run.', 'simple-export-md' ),
+                '<strong>Simple Export to Markdown</strong>'
+            );
+            $message .= '<br>' . sprintf(
+                /* translators: 1: required PHP version, 2: required WordPress version. */
+                __( 'Minimum requirements: PHP %1$s and WordPress %2$s.', 'simple-export-md' ),
+                esc_html( $php_required ),
+                esc_html( $wp_required )
+            );
+            $message .= '<br>' . sprintf(
+                /* translators: 1: current PHP version, 2: current WordPress version. */
+                __( 'Your system: PHP %1$s, WordPress %2$s.', 'simple-export-md' ),
+                esc_html( PHP_VERSION ),
+                esc_html( get_bloginfo( 'version' ) )
+            );
+
             $allowed = array(
                 'strong' => array(),
                 'br'     => array(),

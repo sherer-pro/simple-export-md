@@ -11,11 +11,11 @@ Conversion runs entirely in the browser with the vendored Turndown library. The 
 - Generate YAML front matter for `title`, `slug`, `date`, `categories`, and `tags`.
 - Use the edited post state, including unsaved title, slug, date, category, tag, and block changes.
 - Load only in the block editor for users with `edit_posts`.
-- Support JavaScript translations through `wp_set_script_translations()`.
+- Support PHP and JavaScript translations.
 
 ## Requirements
 
-- WordPress 7.0 or newer.
+- WordPress 6.0 or newer.
 - PHP 7.4 or newer.
 - The WordPress block editor.
 
@@ -38,7 +38,9 @@ simple-export-md/
     turndown.js
     turndown.min.js
   languages/
+    simple-export-md.pot
     simple-export-md-{locale}.po
+    simple-export-md-{locale}.mo
     simple-export-md-{locale}-simple-export-md.json
   THIRD-PARTY-NOTICES.md
 ```
@@ -76,6 +78,7 @@ php -l simple-export-md.php
 ```
 
 `assets/export-md.min.js` must be committed only as the Terser output from `npm run build`.
+Translation updates should be regenerated with WP-CLI (`wp i18n make-pot`, `wp i18n update-po`, and `wp i18n make-mo`) so the PHP `.mo` files and JavaScript JSON files stay in sync.
 
 ## Compatibility Smoke Targets
 
@@ -85,7 +88,7 @@ php -l simple-export-md.php
 
 ## Localization
 
-The plugin text domain is `simple-export-md`.
+The plugin text domain is `simple-export-md`. PHP translations load from `/languages` with `load_plugin_textdomain()`.
 
 JavaScript translation JSON files use handle-based names:
 

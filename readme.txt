@@ -23,11 +23,11 @@ The plugin uses the bundled Turndown library to convert serialized Gutenberg blo
 * Auto-generated YAML front matter for `title`, `slug`, `date`, `categories`, and `tags`.
 * Uses the edited post state, including unsaved title, slug, date, category, tag, and block changes.
 * Loads only in the block editor for users with `edit_posts`.
-* JavaScript translations are loaded with `wp_set_script_translations()`.
+* PHP and JavaScript translations are loaded from the plugin language files.
 
 == Requirements ==
 
-* WordPress 7.0 or newer.
+* WordPress 6.0 or newer.
 * PHP 7.4 or newer.
 * Active Gutenberg/block editor.
 
@@ -55,7 +55,7 @@ Custom blocks are serialized by WordPress before Turndown converts the resulting
 
 = Why are the JavaScript translation files named with the script handle? =
 
-The files use the `simple-export-md-{locale}-simple-export-md.json` pattern so translations work for both the source and minified editor scripts.
+PHP translations use `simple-export-md-{locale}.mo`. JavaScript translations use the `simple-export-md-{locale}-simple-export-md.json` pattern so translations work for both the source and minified editor scripts.
 
 = How should release builds be verified? =
 

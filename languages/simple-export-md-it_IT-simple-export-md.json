@@ -1,6 +1,6 @@
 {
   "translation-revision-date": "2026-06-21 00:00+0300",
-  "generator": "Codex",
+  "generator": "WP-CLI/2.12.0",
   "source": "assets/export-md.js",
   "domain": "messages",
   "locale_data": {
