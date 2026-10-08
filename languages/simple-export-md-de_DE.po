@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: simple-export-md 0.1.3\n"
+"Project-Id-Version: simple-export-md 0.1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -38,19 +38,76 @@ msgid "https://sherer.pro"
 msgstr "https://sherer.pro"
 
 #. translators: %s: plugin name.
-#: simple-export-md.php:60
+#: simple-export-md.php:62
 #, php-format
 msgid "%s cannot run."
 msgstr "%s kann nicht ausgeführt werden."
 
 #. translators: 1: required PHP version, 2: required WordPress version.
-#: simple-export-md.php:65
+#: simple-export-md.php:67
 #, php-format
 msgid "Minimum requirements: PHP %1$s and WordPress %2$s."
 msgstr "Mindestanforderungen: PHP %1$s und WordPress %2$s."
 
 #. translators: 1: current PHP version, 2: current WordPress version.
-#: simple-export-md.php:71
+#: simple-export-md.php:73
 #, php-format
 msgid "Your system: PHP %1$s, WordPress %2$s."
 msgstr "Ihr System: PHP %1$s, WordPress %2$s."
+
+#: assets/export-md.js:243
+msgid "Markdown exporter is not ready. Please reload the editor."
+msgstr "Der Markdown-Export ist nicht bereit. Bitte laden Sie den Editor neu."
+
+#: assets/export-md.js:249
+msgid "Clipboard is not available in this browser."
+msgstr "Die Zwischenablage ist in diesem Browser nicht verfügbar."
+
+#: assets/export-md.js:317
+#: assets/export-md.js:365
+msgid "Could not load all categories and tags. Please retry."
+msgstr "Nicht alle Kategorien und Schlagwörter konnten geladen werden. Bitte versuchen Sie es erneut."
+
+#: assets/export-md.js:330
+msgid "Markdown copied to clipboard."
+msgstr "Markdown in die Zwischenablage kopiert."
+
+#: assets/export-md.js:332
+msgid "Failed to copy Markdown."
+msgstr "Markdown konnte nicht kopiert werden."
+
+#: assets/export-md.js:344
+msgid "Markdown file generated and downloaded."
+msgstr "Markdown-Datei erstellt und heruntergeladen."
+
+#: assets/export-md.js:346
+msgid "Failed to download Markdown."
+msgstr "Markdown-Datei konnte nicht heruntergeladen werden."
+
+#: assets/export-md.js:353
+msgid "Loading terms..."
+msgstr "Begriffe werden geladen..."
+
+#: assets/export-md.js:354
+msgid "Processing..."
+msgstr "Verarbeitung…"
+
+#: assets/export-md.js:360
+msgid "Export to Markdown"
+msgstr "Als Markdown exportieren"
+
+#: assets/export-md.js:369
+msgid "Retry loading terms"
+msgstr "Erneut laden"
+
+#: assets/export-md.js:388
+msgid "Download .md"
+msgstr ".md herunterladen"
+
+#: assets/export-md.js:389
+msgid "Copy Markdown"
+msgstr "Markdown kopieren"
+
+#: assets/export-md.js:375
+msgid "Markdown will omit content from these blocks:"
+msgstr "Beim Markdown-Export wird der Inhalt dieser Blöcke ausgelassen:"

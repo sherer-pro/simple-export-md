@@ -3,7 +3,9 @@
  * Plugin Name: Simple Export to Markdown
  * Plugin URI: https://github.com/sherer-pro/simple-export-md
  * Description: Adds a Gutenberg panel “Export to Markdown” with buttons to download .md or copy Markdown to clipboard.
- * Version:     0.1.3
+ * Version:     0.1.4
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
  * Author:      Pavel Sherer
  * Author URI:  https://sherer.pro
  * License:     GPL-2.0-or-later
@@ -16,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'SHERER_EXPORT_MD_VERSION', '0.1.3' );
+define( 'SHERER_EXPORT_MD_VERSION', '0.1.4' );
 define( 'SHERER_EXPORT_MD_MIN_PHP', '7.4' );
 define( 'SHERER_EXPORT_MD_MIN_WP', '6.0' );
 define( 'SHERER_EXPORT_MD_TEXT_DOMAIN', 'simple-export-md' );
@@ -112,6 +114,11 @@ function sherer_export_md_asset_version( $path ) {
  */
 function sherer_export_md_enqueue_block_editor_assets() {
     if ( ! is_admin() || ! current_user_can( 'edit_posts' ) ) {
+        return;
+    }
+
+    $screen = get_current_screen();
+    if ( ! $screen || 'post' !== $screen->base || ! $screen->is_block_editor() ) {
         return;
     }
 

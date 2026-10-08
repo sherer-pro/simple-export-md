@@ -4,7 +4,7 @@ Tags: markdown, export, clipboard, content, editor
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,9 @@ The plugin uses the bundled Turndown library to convert serialized Gutenberg blo
 * Uses the edited post state, including unsaved title, slug, date, category, tag, and block changes.
 * Loads only in the block editor for users with `edit_posts`.
 * PHP and JavaScript translations are loaded from the plugin language files.
+* Simple tables export as GFM; complex tables retain sanitized HTML.
+* Missing block content is reported in the panel while available content is exported.
+* Incomplete category or tag loading blocks export and offers a retry action.
 
 == Requirements ==
 
@@ -53,6 +56,12 @@ No. Conversion, download, and clipboard copy happen locally in the browser.
 
 Custom blocks are serialized by WordPress before Turndown converts the resulting HTML to Markdown.
 
+Blocks without saved HTML, including synced pattern references, cannot be fully exported. The panel lists omitted blocks in a persistent warning. Server rendering and reference expansion are not performed, and warnings are not added to the Markdown content.
+
+= How are tables exported? =
+
+Rectangular tables without merged cells export as GFM. If there is no header, an empty header is added and all data rows are preserved. Tables with merged cells, captions, nested tables or code blocks retain sanitized HTML.
+
 = Why are the JavaScript translation files named with the script handle? =
 
 PHP translations use `simple-export-md-{locale}.mo`. JavaScript translations use the `simple-export-md-{locale}-simple-export-md.json` pattern so translations work for both the source and minified editor scripts.
@@ -67,6 +76,13 @@ Run `npm ci`, `npm run build`, `npm test`, `npm audit --audit-level=low`, and `p
 2. Example Markdown file with generated YAML front matter.
 
 == Changelog ==
+
+= 0.1.4 =
+* Preserve table structure with GFM or sanitized HTML.
+* Load all selected categories and tags, detect incomplete metadata, and support retry.
+* Warn about omitted block content without modifying exported Markdown.
+* Improve download cleanup, filenames, persistent error notices and editor isolation.
+* Add browser and PHP regression checks and refresh translations.
 
 = 0.1.3 =
 * Hardened editor asset loading.

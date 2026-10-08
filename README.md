@@ -12,6 +12,9 @@ Conversion runs entirely in the browser with the vendored Turndown library. The 
 - Use the edited post state, including unsaved title, slug, date, category, tag, and block changes.
 - Load only in the block editor for users with `edit_posts`.
 - Support PHP and JavaScript translations.
+- Export simple tables as GFM, retaining all data rows even without a header. Tables with merged cells, nested tables, captions, or code blocks remain sanitized HTML.
+- Warn in the panel when saved block markup has no exportable content, including synced pattern references. The export continues without adding warning text to Markdown.
+- Load all selected categories and tags in batches. Failed or incomplete metadata loading blocks export and provides a retry button.
 
 ## Requirements
 
@@ -51,6 +54,7 @@ Install development dependencies before rebuilding generated assets:
 
 ```bash
 npm ci
+npx playwright install chromium
 ```
 
 Available scripts:
@@ -59,11 +63,19 @@ Available scripts:
 npm run build
 npm run check:js
 npm run smoke:js
+npm run smoke:browser
+npm run smoke:php
 npm run audit
 npm test
 ```
 
 `assets/export-md.min.js` is generated from `assets/export-md.js` with Terser. Edit the source file, then run `npm run build`.
+
+Development checks require Node.js 20 or newer and PHP on `PATH`. Browser checks use Playwright Chromium, an installed Chrome/Edge on Windows, or the executable specified by `PLAYWRIGHT_EXECUTABLE_PATH`. They run against both source and minified scripts in an isolated DOM with WordPress API stubs; they do not replace the WordPress compatibility smoke below.
+
+Run development commands from the Git checkout. The WordPress.org runtime package excludes npm manifests and development scripts.
+
+`npm test` checks metadata batching, errors and retries, GFM/HTML tables, omitted blocks, clipboard failures, repeated notices, download cleanup, safe filenames, and PHP asset loading. For an already prepared disposable WordPress fixture, run `node scripts/wordpress-export-md.js http://127.0.0.1:PORT`.
 
 ## Release Checklist
 
@@ -97,6 +109,14 @@ simple-export-md-{locale}-simple-export-md.json
 ```
 
 That keeps translations working whether WordPress loads `assets/export-md.js` with `SCRIPT_DEBUG` or `assets/export-md.min.js` in production.
+
+## Export Limitations
+
+Conversion uses saved HTML from the current editor blocks. It does not execute server rendering callbacks or expand synced pattern references. Omitted blocks are listed in a persistent, dismissible panel warning, which is shown again on the next export. Warning text is never inserted into the file or clipboard content.
+
+Errors remain visible until dismissed. Successful copy/download notices expire and restart for each action. Downloads use the edited slug, with a post-ID fallback and Windows device-name protection.
+
+Script and style contents are excluded. HTML table fallbacks retain structure and safe formatting while removing executable elements, event handlers, inline styles and unsafe link/image schemes. Custom blocks can lose interactive behavior during Markdown conversion.
 
 ## Security Notes
 
