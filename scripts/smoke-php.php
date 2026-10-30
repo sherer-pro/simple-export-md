@@ -6,6 +6,7 @@ $test_admin = true;
 $test_can_edit = true;
 $test_screen = null;
 $test_assets = array();
+$test_script_dependencies = array();
 function add_action( $hook, $callback ) {}
 function get_bloginfo( $key ) { return '6.0'; }
 function is_admin() { global $test_admin; return $test_admin; }
@@ -13,7 +14,7 @@ function current_user_can( $cap ) { global $test_can_edit; return $test_can_edit
 function get_current_screen() { global $test_screen; return $test_screen; }
 function plugin_dir_path( $file ) { return dirname( $file ) . '/'; }
 function plugin_dir_url( $file ) { return 'https://example.invalid/plugin/'; }
-function wp_enqueue_script( $handle, $src, $deps, $version, $footer ) { global $test_assets; $test_assets[] = $src; }
+function wp_enqueue_script( $handle, $src, $deps, $version, $footer ) { global $test_assets, $test_script_dependencies; $test_assets[] = $src; $test_script_dependencies[ $handle ] = $deps; }
 function wp_enqueue_style( $handle, $src, $deps, $version ) { global $test_assets; $test_assets[] = $src; }
 function wp_set_script_translations( $handle, $domain, $path ) {}
 function test_screen( $base, $block_editor = true ) {
@@ -43,4 +44,5 @@ verify( substr( $test_assets[1], -strlen( 'export-md' . $suffix ) ) === 'export-
 $source = file_get_contents( dirname( __DIR__ ) . '/simple-export-md.php' );
 verify( strpos( $source, 'Requires at least: ' . SHERER_EXPORT_MD_MIN_WP ) !== false, 'WordPress header matches runtime requirement' );
 verify( strpos( $source, 'Requires PHP: ' . SHERER_EXPORT_MD_MIN_PHP ) !== false, 'PHP header matches runtime requirement' );
+verify( in_array( 'wp-hooks', $test_script_dependencies[ SHERER_EXPORT_MD_SCRIPT_HANDLE ], true ), 'Enqueue the public JavaScript hooks dependency' );
 echo 'PHP editor asset smoke passed (' . ( SCRIPT_DEBUG ? 'debug' : 'production' ) . ')', PHP_EOL;

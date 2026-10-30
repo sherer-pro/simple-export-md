@@ -49,6 +49,29 @@ add_action( 'init', function () {
 } );
 add_action( 'admin_enqueue_scripts', function () {
     wp_add_inline_script( 'wp-data', 'window.simpleExportMdAuditFixture = ' . wp_json_encode( get_option( 'simple_export_md_audit_fixture' ) ) . ';' );
+    wp_add_inline_script( 'wp-blocks', <<<'JS'
+window.simpleExportMdFixtureCalls = 0;
+wp.blocks.registerBlockType('example/export-diagram', {
+    apiVersion: 2, title: 'Fixture diagram', category: 'widgets',
+    attributes: { caption: { type: 'string', default: '' } },
+    edit: function () { return wp.element.createElement('p', {}, 'Fixture diagram'); },
+    save: function () { return null; }
+});
+wp.hooks.addFilter('simple_export_md.exporters', 'example/fixture', function (entries) {
+    return entries.concat([{
+        id: 'example/fixture', label: 'Fixture diagrams', blockNames: ['example/export-diagram'], selector: '.fixture-export-html',
+        formats: [{ value: 'svg', label: 'Inline SVG' }, { value: 'image', label: 'Image URL' }],
+        exportBlock: async function (block, context) {
+            window.simpleExportMdFixtureCalls++;
+            await new Promise(function (resolve) { setTimeout(resolve, 30); });
+            if (context.format === 'svg') return { type: 'svg', content: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 40"><rect width="80" height="40" fill="blue"/><text x="2" y="20">Fixture SVG</text></svg>' };
+            return { type: 'image', url: 'https://example.invalid/diagram.png', alt: 'Fixture diagram' };
+        },
+        exportHtml: function () { return { type: 'html', content: '<p><strong>Fixture HTML exported</strong></p>' }; }
+    }]);
+});
+JS
+    );
 } );
 PHP
 );

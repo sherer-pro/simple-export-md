@@ -1,6 +1,6 @@
 {
   "name": "simple-export-md",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Gutenberg editor panel for exporting posts and pages to Markdown.",
   "private": true,
   "scripts": {

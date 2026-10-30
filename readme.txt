@@ -2,9 +2,9 @@
 Contributors: skreep
 Tags: markdown, export, clipboard, content, editor
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1.4
 Requires PHP: 7.4
-Stable tag: 0.1.4
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,12 +19,14 @@ The plugin uses the bundled Turndown library to convert serialized Gutenberg blo
 == Features ==
 
 * Export Gutenberg content directly to Markdown.
+* Opt-in formats supplied by independent plugins and themes for custom blocks and HTML.
 * Download `.md` files or copy Markdown to the clipboard.
 * Auto-generated YAML front matter for `title`, `slug`, `date`, `categories`, and `tags`.
 * Uses the edited post state, including unsaved title, slug, date, category, tag, and block changes.
 * Loads only in the block editor for users with `edit_posts`.
 * PHP and JavaScript translations are loaded from the plugin language files.
 * Simple tables export as GFM; complex tables retain sanitized HTML.
+* Preformatted blocks retain whitespace, and audio/video blocks retain their source links.
 * Missing block content is reported in the panel while available content is exported.
 * Incomplete category or tag loading blocks export and offers a retry action.
 
@@ -58,6 +60,14 @@ Custom blocks are serialized by WordPress before Turndown converts the resulting
 
 Blocks without saved HTML, including synced pattern references, cannot be fully exported. The panel lists omitted blocks in a persistent warning. Server rendering and reference expansion are not performed, and warnings are not added to the Markdown content.
 
+Plugins and themes can supply optional export adapters through the JavaScript filter `simple_export_md.exporters`. Applicable adapters add format selectors to the panel, initially set to Standard export. Supported results include HTML, static inline SVG and an image URL. Asynchronous callbacks are supported with a 30-second deadline. Adapter errors stop export so that incomplete custom content is not silently downloaded.
+
+Adapters run only when explicitly selected and are responsible for their own data access. No theme-specific integration is bundled. See the Extension API section of the project README and `docs/extensions.md` for the contract and examples.
+
+= How is SVG exported? =
+
+SVG supplied by an adapter is embedded as HTML inside the Markdown file. Display depends on the Markdown viewer. The static SVG profile supports geometry and text, but excludes scripts, CSS, external resources and foreignObject. An adapter must supply compatible SVG or offer an image URL. Separate SVG files and ZIP archives are not generated.
+
 = How are tables exported? =
 
 Rectangular tables without merged cells export as GFM. If there is no header, an empty header is added and all data rows are preserved. Tables with merged cells, captions, nested tables or code blocks retain sanitized HTML.
@@ -77,6 +87,14 @@ Run `npm ci`, `npm run build`, `npm test`, `npm audit --audit-level=low`, and `p
 
 == Changelog ==
 
+= 0.2.0 =
+* Add an independent JavaScript extension API for custom Gutenberg blocks and HTML, with opt-in format controls.
+* Support asynchronous adapters returning HTML, static inline SVG or image URLs, with deadlines and clear error handling.
+* Preserve nested content and update omitted-block warnings after adapter fallbacks.
+* Fix page exports in the template-based editor and Custom HTML serialization on WordPress 7.1.
+* Preserve preformatted whitespace and audio/video source links; use the current editor panel API where available.
+* Add integration documentation, regression checks and updated translations.
+
 = 0.1.4 =
 * Preserve table structure with GFM or sanitized HTML.
 * Load all selected categories and tags, detect incomplete metadata, and support retry.
@@ -92,3 +110,8 @@ Run `npm ci`, `npm run build`, `npm test`, `npm audit --audit-level=low`, and `p
 == License ==
 
 This plugin is open-source software licensed under the GPLv2 or later.
+
+== Upgrade Notice ==
+
+= 0.2.0 =
+Adds optional third-party export adapters and fixes WordPress 7.1 page/block compatibility. Standard export remains the default. SVG support uses a restricted static profile; compatible adapters are supplied separately by themes or plugins.

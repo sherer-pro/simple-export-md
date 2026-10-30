@@ -76,12 +76,50 @@ async function main() {
         assert(await warning.isVisible());
         const partial = await page.evaluate(() => window.simpleExportMdCopied);
         assert(partial.includes('Kept body') && !partial.includes('omit content'));
+        await page.evaluate(() => {
+            wp.data.dispatch('core/block-editor').resetBlocks([
+                wp.blocks.createBlock('core/group', {}, [
+                    wp.blocks.createBlock('core/paragraph', { content: 'Before extension' }),
+                    wp.blocks.createBlock('example/export-diagram', { caption: 'Original caption' }),
+                    wp.blocks.createBlock('core/html', { content: '<div class="fixture-export-html">Original custom HTML</div>' }, [], ['<div class="fixture-export-html">Original custom HTML</div>']),
+                    wp.blocks.createBlock('core/paragraph', { content: 'After extension' }),
+                ]),
+            ]);
+        });
+        const format = panel.getByLabel('Fixture diagrams', { exact: true });
+        await format.waitFor();
+        assert.equal(await format.inputValue(), '');
+        assert.equal(await page.evaluate(() => window.simpleExportMdFixtureCalls), 0);
+        await copy.click();
+        assert(!(await page.evaluate(() => window.simpleExportMdCopied)).includes('<svg'));
+        assert.equal(await page.evaluate(() => window.simpleExportMdFixtureCalls), 0);
+        await format.selectOption('svg');
+        const originalBlocks = await page.evaluate(() => JSON.stringify(wp.data.select('core/block-editor').getBlocks()));
+        await copy.click();
+        await waitReady();
+        await panel.getByText('Markdown copied to clipboard.', { exact: true }).waitFor();
+        const svgMarkdown = await page.evaluate(() => window.simpleExportMdCopied);
+        assert(svgMarkdown.includes('<svg') && svgMarkdown.includes('Fixture SVG</text>'));
+        assert(svgMarkdown.includes('**Fixture HTML exported**') && !svgMarkdown.includes('Original custom HTML'));
+        assert(svgMarkdown.indexOf('Before extension') < svgMarkdown.indexOf('<svg') && svgMarkdown.indexOf('<svg') < svgMarkdown.indexOf('After extension'));
+        assert.equal(await page.evaluate(() => JSON.stringify(wp.data.select('core/block-editor').getBlocks())), originalBlocks);
+        assert.equal(await warning.count(), 0);
+        const svgDownloadEvent = page.waitForEvent('download');
+        await panel.getByRole('button', { name: 'Download .md', exact: true }).click();
+        assert.equal(fs.readFileSync(await (await svgDownloadEvent).path(), 'utf8'), svgMarkdown);
+        await format.selectOption('image'); await copy.click(); await waitReady();
+        await panel.getByText('Markdown copied to clipboard.', { exact: true }).waitFor();
+        assert((await page.evaluate(() => window.simpleExportMdCopied)).includes('![Fixture diagram](https://example.invalid/diagram.png)'));
+        await format.selectOption(''); await copy.click();
+        await warning.waitFor();
+        assert(!(await page.evaluate(() => window.simpleExportMdCopied)).includes('Fixture SVG'));
+        const script = await page.locator('script[src*="/assets/export-md."]').getAttribute('src');
         await page.goto(new URL('/wp-admin/site-editor.php', base).href);
         assert.equal(await page.locator('script[src*="/plugins/simple-export-md/"]').count(), 0);
         await page.goto(new URL('/wp-admin/widgets.php', base).href);
         assert.equal(await page.locator('script[src*="/plugins/simple-export-md/"]').count(), 0);
         assert.deepEqual(errors, []);
-        console.log(`${base.origin}: Gutenberg export, 201 categories, download, REST retry, persistent warning and editor isolation passed`);
+        console.log(`${base.origin}: Gutenberg metadata, tables, extension controls, async nested blocks, custom HTML, SVG/image export, identical download, REST retry and editor isolation passed (${script.includes('.min.js') ? 'minified' : 'source'})`);
     } finally {
         await browser.close();
     }

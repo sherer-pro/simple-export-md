@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: simple-export-md 0.1.4\n"
+"Project-Id-Version: simple-export-md 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -55,59 +55,89 @@ msgstr "Requisiti minimi: PHP %1$s e WordPress %2$s."
 msgid "Your system: PHP %1$s, WordPress %2$s."
 msgstr "Il tuo sistema: PHP %1$s, WordPress %2$s."
 
-#: assets/export-md.js:243
+#: assets/export-md.js:537
 msgid "Markdown exporter is not ready. Please reload the editor."
 msgstr "L’esportatore Markdown non è pronto. Ricarica l’editor."
 
-#: assets/export-md.js:249
+#: assets/export-md.js:543
 msgid "Clipboard is not available in this browser."
 msgstr "Gli appunti non sono disponibili in questo browser."
 
-#: assets/export-md.js:317
-#: assets/export-md.js:365
+#: assets/export-md.js:659
+#: assets/export-md.js:715
 msgid "Could not load all categories and tags. Please retry."
 msgstr "Impossibile caricare tutte le categorie e i tag. Riprovare."
 
-#: assets/export-md.js:330
+#: assets/export-md.js:675
 msgid "Markdown copied to clipboard."
 msgstr "Markdown copiato negli appunti."
 
-#: assets/export-md.js:332
+#: assets/export-md.js:677
 msgid "Failed to copy Markdown."
 msgstr "Impossibile copiare il Markdown."
 
-#: assets/export-md.js:344
+#: assets/export-md.js:693
 msgid "Markdown file generated and downloaded."
 msgstr "File .md generato e scaricato."
 
-#: assets/export-md.js:346
+#: assets/export-md.js:695
 msgid "Failed to download Markdown."
 msgstr "Impossibile scaricare il file Markdown."
 
-#: assets/export-md.js:353
+#: assets/export-md.js:703
 msgid "Loading terms..."
 msgstr "Caricamento termini..."
 
-#: assets/export-md.js:354
+#: assets/export-md.js:704
 msgid "Processing..."
 msgstr "Elaborazione…"
 
-#: assets/export-md.js:360
+#: assets/export-md.js:710
 msgid "Export to Markdown"
 msgstr "Esporta in Markdown"
 
-#: assets/export-md.js:369
+#: assets/export-md.js:719
 msgid "Retry loading terms"
 msgstr "Riprova il caricamento"
 
-#: assets/export-md.js:388
+#: assets/export-md.js:750
 msgid "Download .md"
 msgstr "Scarica .md"
 
-#: assets/export-md.js:389
+#: assets/export-md.js:751
 msgid "Copy Markdown"
 msgstr "Copia Markdown"
 
-#: assets/export-md.js:375
+#: assets/export-md.js:737
 msgid "Markdown will omit content from these blocks:"
 msgstr "Il contenuto di questi blocchi verrà omesso durante l’esportazione in Markdown:"
+
+#: assets/export-md.js:83
+#: assets/export-md.js:89
+msgid "An export extension timed out. Please retry."
+msgstr "Un’estensione di esportazione ha superato il tempo di attesa. Riprova."
+
+#: assets/export-md.js:90
+msgid "An export extension failed. Please retry or use standard export."
+msgstr "Un’estensione di esportazione non ha funzionato. Riprova o usa l’esportazione standard."
+
+#: assets/export-md.js:96
+msgid "SVG export requires static SVG without scripts, CSS, foreignObject or external resources."
+msgstr "L’esportazione SVG richiede SVG statico senza script, CSS, foreignObject o risorse esterne."
+
+#: assets/export-md.js:160
+#: assets/export-md.js:249
+msgid "An export extension returned invalid content."
+msgstr "Un’estensione di esportazione ha restituito contenuti non validi."
+
+#: assets/export-md.js:726
+msgid "Standard export"
+msgstr "Esportazione standard"
+
+#: assets/export-md.js:486
+msgid "Audio"
+msgstr "Audio"
+
+#: assets/export-md.js:486
+msgid "Video"
+msgstr "Video"
